@@ -1,0 +1,72 @@
+Alfredo Espinoza (20170552)
+Porcentaje de uso de internet por país. Se usarán los datos del 2017
+
+Trayendo desde Github
+```{r}
+linkinter="https://github.com/Alfredo-Espinoza/Estadistica-2-Parte-individual-del-trabajo-grupal/raw/master/API_IT.NET.USER.ZS_DS2_en_excel_v2_199844.xlsx"
+#Descargando en carpeta
+download.file(linkinter, "intercel.xlsx")
+```
+Unimos todas las hojas:
+
+```{r}
+library(rio)
+internet <- import_list('intercel.xlsx',rbind = TRUE)
+```
+Revisamos la base
+```{r}
+str(internet)
+```
+
+
+
+Borrando las columnas de otros años
+
+```{r}
+internet[2:50]=NULL
+```
+
+```{r}
+internet[2:12]=NULL
+```
+
+```{r}
+internet[3:13]=NULL
+```
+Eliminando los NA
+```{r}
+internet=internet[complete.cases(internet),]
+```
+Cambiando nombres de variables.
+```{r}
+names(internet)[1]="Pais"
+```
+
+```{r}
+names(internet)[2]="Porcentaje de la población que usa internet (2017)"
+
+```
+Eliminando posibles espacios vacios
+```{r}
+internet$Pais=trimws(internet$Pais,whitespace = "[\\h\\v]")
+internet$`Porcentaje de la población que usa internet (2017)`=trimws(internet$`Porcentaje de la población que usa internet (2017)`,whitespace = "[\\h\\v]")
+```
+Eliminando primera fila.
+```{r}
+internet=internet[-1,]
+```
+
+Hay observaciones que corresponden a la suciedad de la data. Varias de ellas serán eliminadas una vez se realiza el merge de acuerdo a "Pais" con las variables del grupo de trabajo. El resto tendrán que ser eliminadas manualmente.
+
+Pasando la variable a numérico
+```{r}
+internet$`Porcentaje de la población que usa internet (2017)`=as.numeric(internet$`Porcentaje de la población que usa internet (2017)`)
+```
+
+Revisando
+```{r}
+str(internet)
+```
+
+
+
